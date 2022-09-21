@@ -1,7 +1,6 @@
 package IS;
 import robocode.*;
 import java.awt.Color;
-import robocode.ScannedRobotEvent;
 
 // API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
 
@@ -10,7 +9,6 @@ import robocode.ScannedRobotEvent;
  */
 public class Robocop extends Robot
 {
-	boolean peek;
 	/**
 	 * run: Robocop's default behavior
 	 */
@@ -93,22 +91,6 @@ public class Robocop extends Robot
 		if (peek) {
 			scan();
 		}
-
-		if (peek) {
-			scan();
-
-		}
-	}
-	public void onHitByBullet(HitByBulletEvent e) {
-		// Replace the next line with any behavior you would like
-		turnLeft(90);
-		ahead(185);
-		turnRight(90);
-		ahead(185);
-
-		peek = false;
-
-
 	}
 
 	public void onHitWall(HitWallEvent e) {
