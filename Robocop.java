@@ -12,6 +12,8 @@ public class Robocop extends Robot
 	/**
 	 * run: Robocop's default behavior
 	 */
+	boolean peek;
+	boolean phaseTwo = false;
 	public void run() {
 		// Initialization of the robot should be put here
 		//comment
@@ -24,14 +26,44 @@ public class Robocop extends Robot
 		// and the next line:
 
 		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
-
-		// Robot main loop
-		while(true) {
-			// Replace the next 4 lines with any behavior you would like
+		double startPosition = 0;
+		double moveAmount = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
+		// Get to the left wall first
+		if (getX()>startPosition){
+			turnRight(-(getHeading() - 90));
+			back(getX()-startPosition);
+		}else {
+			turnRight(-(getHeading() - 90));
+			ahead(startPosition - getX());
+		}
+		// Get to the bottom next
+		if (getY()>startPosition){
+			turnRight(90);
+			ahead(getY()-startPosition);
+		}else {
+			turnRight(90);
+			back(startPosition - getY());
+		}
+		// Once there, get the tour
+		turnGunLeft(-(getGunHeading()));
+		turnGunLeft(90);
+		
+		//Mimics the Wall sample bot.
+		while(getOthers()>1){
+			peek = true;
+			ahead(moveAmount);
+			peek = false;
+			turnRight(90);
+		}
+		// Switch to phase two where we no longer crawl on the wall but start attacking
+		phaseTwo = true;
+		while(true){
+			turnRight(15);
+			turnGunLeft(-(getGunHeading()));
 			ahead(100);
-			turnGunRight(360);
+			turnLeft(30);
+			turnGunRight(90);
 			back(100);
-			turnGunRight(360);
 		}
 	}
 
@@ -40,30 +72,54 @@ public class Robocop extends Robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		fire(1);
+		double range = e.getDistance();
+		if (range > 750) {
+			//fire(5);
+		}
+		else if (range > 600 && range <= 750) {
+			//fire(2);
+		}
+		else if (range > 450 && range <= 600) {
+			fire(3);
+		}
+		else if (range > 250 && range <= 450) {
+			fire(4);
+		}
+		else {
+			fire(5);
+		}
+		if (peek) {
+			scan();
+		}
 	}
 
-	/**
-	 * onHitByBullet: What to do when you're hit by a bullet
-	 */
-	public void onHitByBullet(HitByBulletEvent e) {
-		// Replace the next line with any behavior you would like
-		back(10);
-	}
-	
-	/**
-	 * onHitWall: What to do when you hit a wall
-	 */
 	public void onHitWall(HitWallEvent e) {
 		// Replace the next line with any behavior you would like
-		back(20);
+		if (phaseTwo){
+		turnLeft(-e.getBearing());
+		turnLeft(180);
+		ahead(400);
+		}
+		
+	}
+	public void onHitRobot(HitRobotEvent e){
+		if (phaseTwo){
+			back(30);
+			turnRight(45);
+			ahead(60);
+			turnLeft(45);
+		}else{
+			turnGunLeft(45);
+			fire(10);
+			back(50);
+			turnGunRight(45);
+		}
 	}
 	public void onWin(WinEvent e) {
 		for (int i = 0; i < 150; i++) {
 			ahead(5);
-
 			back(5);
-			turnRight(315);
+			turnRight(10);
 		}
 	} 
 }
