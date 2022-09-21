@@ -60,12 +60,12 @@ public class Robocop extends Robot
 		// Switch to phase two where we no longer crawl on the wall but start attacking
 		phaseTwo = true;
 		while(true){
-			turnRight(15);
-			turnGunLeft(-(getGunHeading()));
-			ahead(100);
-			turnLeft(30);
-			turnGunRight(90);
-			back(100);
+			turnRight(30);
+			turnGunLeft(180);
+			ahead(175);
+			turnLeft(60);
+			turnGunRight(180);
+			back(175);
 		}
 	}
 
